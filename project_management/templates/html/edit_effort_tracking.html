@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+    <div id="wrapper">
+        <!-- sidebar-wrapper -->
+        {% include 'sidebar.html' %}
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Edit Task Details</h1>
+                        <div>
+                            <form action="/administration/effort/edit/{{effort_record_obj.id}}/save/" method="POST">{% csrf_token %}
+                            <div class="form-group">
+                                <label for="story">Story:</label>
+                                {{effort_record_obj.subtask.task.task_id}}
+                            </div>
+                            <div class="form-group">
+                                <label for="sub_task">SubTask:</label>
+                                {{effort_record_obj.subtask.subtask_id}}
+                            </div>
+                            <div class="form-group">
+                                <label for="assigned_to">Developer:</label>
+                                <select name="developer" id="developer">
+                                {% for user in users %}
+                                    <option value={{user.id}} {% ifequal user.id effort_record_obj.subtask.user.id %}selected="selected"{% endifequal %}>{{user.username}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="assigned_to">Assigned On:</label>
+                                {{effort_record_obj.subtask.assigned_datetime | date:"m/d/Y"}}
+                            </div>
+                            <div class="form-group">
+                                <label for="team">Team:</label>
+                                <select name="team" id="team">
+                                {% for team in team_list %}
+                                    <option value="{{team.1}}" {% ifequal team.1 effort_record_obj.subtask.team %}selected="selected"{% endifequal %}>{{team.1}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="scope">Scope:</label>
+                                <select name="subtask_scope" id="subtask_scope">
+                                {% for scope in subtask_scope %}
+                                    <option value="{{scope.1}}" {% ifequal scope.1 effort_record_obj.subtask.subtask_scope %}selected="selected"{% endifequal %}>{{scope.1}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status:</label>
+                                <select name="status" id="status">
+                                {% for task_status in task_status_list %}
+                                    <option value="{{task_status}}" {% ifequal task_status effort_record_obj.subtask.status %}selected="selected"{% endifequal %}>{{task_status}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="start_date">Start Date:</label>
+                                <input type="text" name="start_date" id="start_date" class="form-control" readonly style="width: 200px;" value="{{effort_record_obj.start_date | date:'m/d/Y'}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="peer_review_date">Peer Review:</label>
+                                <input type="text" name="peer_review_date" id="peer_review_date" class="form-control" readonly style="width: 200px;" value="{{effort_record_obj.peer_review_date | date:'m/d/Y'}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="internal_qa_date">Internal QA:</label>
+                                <input type="text" name="internal_qa_date" id="internal_qa_date" class="form-control" readonly style="width: 200px;" value="{{effort_record_obj.internal_qa_date | date:'m/d/Y'}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="pr_date">Pull Request:</label>
+                                <input type="text" name="pr_date" id="pr_date" class="form-control" readonly style="width: 200px;" value="{{effort_record_obj.pr_date | date:'m/d/Y'}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="client_review_date">Client Review:</label>
+                                <input type="text" name="client_review_date" id="client_review_date" class="form-control" readonly style="width: 200px;" value="{{effort_record_obj.client_review_date | date:'m/d/Y'}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="code_merge_date">Code Merge:</label>
+                                <input type="text" name="code_merge_date" id="code_merge_date" class="form-control" readonly style="width: 200px;" value="{{effort_record_obj.code_merge_date | date:'m/d/Y'}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="qa_testing">QA Testing:</label>
+                                <input type="text" name="qa_testing" id="qa_testing" class="form-control" readonly style="width: 200px;" value="{{effort_record_obj.qa_testing | date:'m/d/Y'}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="closed">Closed:</label>
+                                <input type="text" name="closed" id="closed" class="form-control" readonly style="width: 200px;" value="{{effort_record_obj.closed | date:'m/d/Y'}}" />
+                            </div>
+
+                            <button type="submit" class="btn btn-default">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block js %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript">
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    $(function () {
+        $('#start_date').datepicker();
+    });
+    $(function () {
+        $('#peer_review_date').datepicker();
+    });
+    $(function () {
+        $('#internal_qa_date').datepicker();
+    });
+    $(function () {
+        $('#pr_date').datepicker();
+    });
+    $(function () {
+        $('#client_review_date').datepicker();
+    });
+    $(function () {
+        $('#code_merge_date').datepicker();
+    });
+    $(function () {
+        $('#qa_testing').datepicker();
+    });
+    $(function () {
+        $('#closed').datepicker();
+    });
+    </script>
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+    <div id="wrapper">
+        <!-- Sidebar -->
+        {% include 'sidebar.html' %}
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Story Management</h1>
+                        <div style="width: 50%; display: inline-block; height: 400px; overflow: auto;">
+                            <div class="form-group">
+                                <label for="sprint_name">Sprint Name:</label>
+                                <select name="sprint_id" id="sprint_id">
+                                    {% for sprint in sprint_objects %}
+                                        <option value={{sprint.id}} {% ifequal sprint.id sprint_obj.id %}selected="selected"{% endifequal %}>{{sprint.sprint_name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <table class="table">
+                                <thead>
+                                    <th>Sr. No.</th>
+                                    <th>Jira ID</th>
+                                    <th>Story Point</th>
+                                    <th>Created</th>
+                                    <th>Assigned To</th>
+                                </thead>
+                                <tbody>
+                                    {% for task in task_objects %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{task.task_id}}</td>
+                                        <td>{{task.story_point}}</td>
+                                        <td>{{task.created_datetime | date:"M d, Y"}}</td>
+                                        <td>{{task.user}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="width: 50%; display: inline-block; float: right; margin-top: 35px; padding-left: 40px;">
+                        <form action="/administration/task/add/" method="POST" id="add_story_form">{% csrf_token %}
+                            <div class="form-group">
+                                <label for="pwd">Story Jira ID:</label>
+                                <input type="text" name="task_id" id="task_id" class="form-control" style="text-transform:uppercase;" placeholder="DOMO-XXXXX"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="story_points">Story Point:</label>
+                                <select name="story_point" id="story_point">
+                                    {% for sp in story_points %}
+                                        <option value={{sp}}>{{sp}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="users">Assigned To:</label>
+                                <select name="user" id="user">
+                                    {% for user_obj in users %}
+                                        <option value={{user.id}}>{{user_obj.username}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sprint_name">Created Date:</label>
+                                <input type="text" name="created_datetime" id="created_datetime" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <input type="button" value="Save" class="btn btn-primary btn-md" onClick="submitForm();"/>
+                            </div>
+                        </form>
+                        </div>
+                        <div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block js %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript">
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    $(function () {
+        $('#created_datetime').datepicker();
+    });
+    $(function(){
+      // bind change event to select
+      $('#sprint_id').on('change', function () {
+          var url = "/administration/task/?id=" + this.value;
+          window.location = url;
+      });
+    });
+/*     function addStoryForm(){
+        var sprint_id = $( "#sprint_id").val();
+    }*/
+    function submitForm(){
+        var sprint_id = $( "#sprint_id").val();
+        var add_story_form = document.getElementById("add_story_form");
+        add_story_form.action = "/administration/task/add/?id=" + sprint_id;
+        add_story_form.submit();
+        }
+    </script>
+    {% endblock %}
+{% endblock %}

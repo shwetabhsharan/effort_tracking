@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+    <div id="wrapper">
+        <!-- Sidebar -->
+        {% include 'sidebar.html' %}
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>SubTask Management</h1>
+                        <!-- <div><input type="button" value="Toggle" id="menu-toggle"/></div> -->
+                        <div style="padding-top: 40px;">
+                            <div class="form-group">
+                                <label for="task_id">Story:</label>
+                                <select name="task_id" id="task_id">
+                                    {% for task in task_objects %}
+                                        <option value={{task.id}} {% ifequal task.id task_obj.id %}selected="selected"{% endifequal %}>{{task.task_id}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sprint_name">Sprint:</label>
+                                {{task_obj.sprint.sprint_name}}
+                            </div>
+                            <div class="form-group">
+                                <label for="story_point">Story Point:</label>
+                                {{task_obj.story_point}}
+                            </div>
+                            <div class="form-group">
+                                <label for="created_on">Created On:</label>
+                                {{task_obj.created_datetime | date:"M d, Y"}}
+                            </div>
+                        </div>
+                        <div style="width: 50%; display: inline-block; height: 400px; overflow: auto;">
+                            <table class="table">
+                                <thead>
+                                    <th>Sr. No.</th>
+                                    <th>SubTask Jira ID</th>
+                                    <th>Effort</th>
+                                    <th>Owner</th>
+                                    <th>Status</th>
+                                    <th>Assigned</th>
+                                    <th>Scope</th>
+                                    <th>Team</th>
+                                </thead>
+                                <tbody>
+                                    {% for subtask in subtask_objects %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{subtask.subtask_id}}</td>
+                                        <td>{{subtask.effort}}</td>
+                                        <td>{{subtask.user}}</td>
+                                        <td>{{subtask.status}}</td>
+                                        <td>{{subtask.assigned_datetime | date:"M d, Y"}}</td>
+                                        <td>{{subtask.subtask_scope}}</td>
+                                        <td>{{subtask.team}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="width: 50%; display: inline-block; float: right; margin-top: 30px; padding-left: 40px;">
+                        <form action="/administration/subtask/add/" method="POST" id="add_subtask_form">{% csrf_token %}
+                            <div class="form-group">
+                                <label for="pwd">SubTask Jira ID:</label>
+                                <input type="text" name="subtask_id" id="subtask_id" class="form-control" style="text-transform:uppercase;" placeholder="DOMO-XXXXX"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="effort">Effort:</label>
+                                <input type="text" name="effort" id="effort" class="form-control" style="width: 100px;" placeholder="Hours"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status:</label>
+                                <select name="status" id="status">
+                                    {% for stat in statuses %}
+                                        <option value="{{stat}}">{{stat}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="users">Assigned To:</label>
+                                <select name="user" id="user">
+                                    {% for user_obj in users %}
+                                        <option value={{user.id}}>{{user_obj.username}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="assigned_date">Assigned On:</label>
+                                <input type="text" name="assigned_datetime" id="assigned_datetime" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label for="scope">Scope:</label>
+                                <select name="scope" id="scope">
+                                    {% for scope in subtask_scope %}
+                                        <option value={{scope.1}}>{{scope.1}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="team">Team:</label>
+                                <select name="team" id="team">
+                                    {% for team in team_list %}
+                                        <option value={{team.1}}>{{team.1}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="button" value="Save" class="btn btn-primary btn-md" onClick="submitForm();"/>
+                            </div>
+                        </form>
+                        </div>
+                        <div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block js %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript">
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    $(function () {
+        $('#assigned_datetime').datepicker();
+    });
+    $(function(){
+        // bind change event to select
+        $('#task_id').on('change', function () {
+            var url = "/administration/subtask/?id=" + this.value;
+            window.location = url;
+        });
+      });
+    function submitForm(){
+        var task_id = $( "#task_id").val();
+        var add_subtask_form = document.getElementById("add_subtask_form");
+        add_subtask_form.action = "/administration/subtask/add/?id=" + task_id;
+        add_subtask_form.submit();
+        }
+
+    </script>
+    {% endblock %}
+{% endblock %}
