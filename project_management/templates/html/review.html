@@ -13,6 +13,7 @@
                     <form method="POST" action="/administration/review/add/">{% csrf_token %}
                     <div style="height: 650px; overflow: auto; margin-top: 30px;">
                         <div class="form-group">
+                            <span style="color:red;">*</span>
                             <label for="task_id">SubTask:</label>
                             <select name="subtask_id" id="subtask_id">
                                 {% for subtask in user_subtask_objects %}
@@ -21,6 +22,7 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <span style="color:red;">*</span>
                             <label for="assigned_to">Reviewer:</label>
                             <select name="reviewer" id="reviewer">
                             {% for user in users %}
@@ -30,6 +32,7 @@
                         </div>
 
                         <div class="form-group">
+                            <span style="color:red;">*</span>
                             <label for="review_type">Review Type:</label>
                             <select name="review_type" id="review_type">
                             {% for review_type in review_type_choice %}
@@ -38,18 +41,22 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <span style="color:red;">*</span>
                             <label for="review_date">Review Date:</label>
                             <input type="text" name="review_date" id="review_date" class="form-control" readonly style="width: 200px;" />
                         </div>
                         <div class="form-group">
+                            <span style="color:red;">*</span>
                             <label for="pull_request">Pull Request:</label>
                             <input type="text" name="pull_request" id="pull_request" class="form-control" style="width: 150px;" />
                         </div>
                         <div class="form-group">
+                            <span style="color:red;">*</span>
                             <label for="filename">File Name:</label>
                             <input type="text" name="filename" id="filename" class="form-control" style="width: 300px;" />
                         </div>
                         <div class="form-group">
+                            <span style="color:red;">*</span>
                             <label for="Comment">Comment:</label>
                             <textarea name="comment" id="comment" class="form-control" style="width: 700px; height: 100px;"></textarea>
                         </div>
@@ -58,6 +65,7 @@
                             <input type="text" name="fixed_date" id="fixed_date" class="form-control" readonly style="width: 200px;" />
                         </div>
                         <div class="form-group">
+                            <span style="color:red;">*</span>
                             <label for="status">Status:</label>
                             <select name="status" id="status">
                             {% for status in cr_status %}
@@ -66,6 +74,7 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <span style="color:red;">*</span>
                             <label for="status">RCA:</label>
                             <select name="rca" id="rca">
                             {% for rca in rca_list %}
@@ -73,43 +82,16 @@
                             {% endfor %}
                             </select>
                         </div>
+                        <div>
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <span style="color: red;">{{message}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                         <button type="submit" class="btn btn-default" style="float: right;">Save</button>
                     </div>
                     </form>
-                        <div style="height: 300px; overflow: auto; margin-top: 30px;">
-                            <table class="table">
-                                <thead>
-                                    <th>Sr. No.</th>
-                                    <th>SubTask</th>
-                                    <th>Review Type</th>
-                                    <th>Reviewer</th>
-                                    <th>Pull Request</th>
-                                    <th>File Name</th>
-                                    <th>Comment</th>
-                                    <th>Date of Fix</th>
-                                    <th>Status</th>
-                                    <th>RCA</th>
-                                </thead>
-                                <tbody>
-                                    {% for obj in user_subtask_objects %}
-                                    <tr>
-                                        <td>{{forloop.counter}}</td>
-                                        <td>{{obj.subtask.subtask_id}}</td>
-                                        <td>{{obj.review_type}}</td>
-                                        <td>{{obj.reviewer}}</td>
-                                        <td>{{obj.pull_request}}</td>
-                                        <td>{{obj.filename | default_if_none:"NA"}}</td>
-                                        <td>{{obj.comment | default_if_none:"NA"}}</td>
-                                        <td>{{obj.fix_date | date:"M d, Y" | default_if_none:"NA"}}</td>
-                                        <td>{{obj.review_date | date:"M d, Y" | default_if_none:"NA"}}</td>
-                                        <td>{{obj.status | default_if_none:"NA"}}</td>
-                                        <td>{{obj.rca | default_if_none:"NA"}}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -118,6 +100,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="/media/js/jquery.numeric.js" ></script>
     <script type="text/javascript">
     $(function () {
         $('#fixed_date').datepicker();
@@ -125,6 +108,10 @@
     $(function () {
         $('#review_date').datepicker();
     });
+    $(document).ready(function(){
+        $("#pull_request").numeric();
+    });
+
     </script>
     {% endblock %}
 {% endblock %}

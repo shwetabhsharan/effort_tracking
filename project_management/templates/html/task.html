@@ -44,10 +44,12 @@
                         <div style="width: 50%; display: inline-block; float: right; margin-top: 35px; padding-left: 40px;">
                         <form action="/administration/task/add/" method="POST" id="add_story_form">{% csrf_token %}
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="pwd">Story Jira ID:</label>
                                 <input type="text" name="task_id" id="task_id" class="form-control" style="text-transform:uppercase;" placeholder="DOMO-XXXXX"/>
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="story_points">Story Point:</label>
                                 <select name="story_point" id="story_point">
                                     {% for sp in story_points %}
@@ -56,19 +58,28 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="users">Assigned To:</label>
                                 <select name="user" id="user">
                                     {% for user_obj in users %}
-                                        <option value={{user.id}}>{{user_obj.username}}</option>
+                                        <option value={{user_obj.id}}>{{user_obj.username}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="sprint_name">Created Date:</label>
                                 <input type="text" name="created_datetime" id="created_datetime" class="form-control" readonly />
                             </div>
+                            <div>
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <span style="color: red;">{{message}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                             <div class="form-group">
-                                <input type="button" value="Save" class="btn btn-primary btn-md" onClick="submitForm();"/>
+                                <input type="button" id="button" value="Save" class="btn btn-primary btn-md" onClick="submitForm();"/>
                             </div>
                         </form>
                         </div>
@@ -98,9 +109,6 @@
           window.location = url;
       });
     });
-/*     function addStoryForm(){
-        var sprint_id = $( "#sprint_id").val();
-    }*/
     function submitForm(){
         var sprint_id = $( "#sprint_id").val();
         var add_story_form = document.getElementById("add_story_form");

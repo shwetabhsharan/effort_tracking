@@ -64,14 +64,17 @@
                         <div style="width: 50%; display: inline-block; float: right; margin-top: 30px; padding-left: 40px;">
                         <form action="/administration/subtask/add/" method="POST" id="add_subtask_form">{% csrf_token %}
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="pwd">SubTask Jira ID:</label>
                                 <input type="text" name="subtask_id" id="subtask_id" class="form-control" style="text-transform:uppercase;" placeholder="DOMO-XXXXX"/>
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="effort">Effort:</label>
                                 <input type="text" name="effort" id="effort" class="form-control" style="width: 100px;" placeholder="Hours"/>
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="status">Status:</label>
                                 <select name="status" id="status">
                                     {% for stat in statuses %}
@@ -80,19 +83,22 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="users">Assigned To:</label>
                                 <select name="user" id="user">
                                     {% for user_obj in users %}
-                                        <option value={{user.id}}>{{user_obj.username}}</option>
+                                        <option value={{user_obj.id}}>{{user_obj.username}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
 
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="assigned_date">Assigned On:</label>
                                 <input type="text" name="assigned_datetime" id="assigned_datetime" class="form-control" readonly />
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="scope">Scope:</label>
                                 <select name="scope" id="scope">
                                     {% for scope in subtask_scope %}
@@ -101,12 +107,20 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="team">Team:</label>
                                 <select name="team" id="team">
                                     {% for team in team_list %}
                                         <option value={{team.1}}>{{team.1}}</option>
                                     {% endfor %}
                                 </select>
+                            </div>
+                            <div>
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <span style="color: red;">{{message}}</span>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             <div class="form-group">
                                 <input type="button" value="Save" class="btn btn-primary btn-md" onClick="submitForm();"/>
@@ -124,6 +138,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="/media/js/jquery.numeric.js" ></script>
     <script type="text/javascript">
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
@@ -145,7 +160,9 @@
         add_subtask_form.action = "/administration/subtask/add/?id=" + task_id;
         add_subtask_form.submit();
         }
-
+    $(document).ready(function(){
+        $("#effort").numeric();
+    });
     </script>
     {% endblock %}
 {% endblock %}

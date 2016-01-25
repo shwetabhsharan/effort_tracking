@@ -6,10 +6,16 @@
             <form class="form-horizontal" action='/administration/authenticate/' method="POST">{% csrf_token %}
                 <div class="form-login">
                     <h4>DOMO Task Management</h4>
-                    <input type="text" id="username" name="username" class="form-control input-sm chat-input" placeholder="username" />
-                    </br>
-                    <input type="password" id="password" name="password" class="form-control input-sm chat-input" placeholder="password" />
-                    </br>
+                    <div class="form-group">
+                    <span style="color:red;">*</span>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Username" />
+                    </div>
+                    <div class="form-group">
+                    <span style="color:red;">*</span>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" />
+                    </div>
                     <div>
                         {% if messages %}
                             {% for message in messages %}

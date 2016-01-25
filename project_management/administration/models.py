@@ -63,7 +63,8 @@ rca_type_choice = (
                    ('Code Optimization', 'Code Optimization'),
                    ('Requirement Conflict', 'Requirement Conflict'),
                    ('Reviewer Conflict', 'Reviewer Conflict'),
-                   ('Appreciation', 'Appreciation')
+                   ('Appreciation', 'Appreciation'),
+                   ('NA', 'NA')
                    )
 
 class UserProfile(models.Model):
@@ -174,7 +175,7 @@ class CodeReview(models.Model):
     comment = models.TextField()
 
     review_date = models.DateTimeField()
-    fix_date = models.DateTimeField()
+    fix_date = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=30, null=False, choices=cr_status)
     rca = models.CharField(max_length=30, null=False, choices=rca_type_choice)
 

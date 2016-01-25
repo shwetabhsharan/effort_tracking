@@ -34,20 +34,31 @@
                         <div style="width: 50%; display: inline-block; float: right; margin-top: 35px; padding-left: 40px;">
                         <form action="/administration/sprint/add/" method="POST">{% csrf_token %}
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="sprint_name">Name:</label>
                                 <input type="text" name="sprint_name" id="sprint_name" class="form-control"/>
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="sprint_name">Velocity:</label>
                                 <input type="text" name="velocity" id="velocity" class="form-control" style="width: 50px;"/>
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="pwd">Start Date:</label>
-                                <input type="text" name="sprint_start_date" id="sprint_start_date" class="form-control" readonly required />
+                                <input type="text" name="sprint_start_date" id="sprint_start_date" class="form-control" readonly/>
                             </div>
                             <div class="form-group">
+                                <span style="color:red;">*</span>
                                 <label for="sprint_name">End Date:</label>
-                                <input type="text" name="sprint_end_date" id="sprint_end_date" class="form-control" readonly required/>
+                                <input type="text" name="sprint_end_date" id="sprint_end_date" class="form-control" readonly/>
+                            </div>
+                            <div>
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <span style="color: red;">{{message}}</span>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             <div class="form-group">
                                 <input type="submit" value="Save" class="btn btn-primary btn-md" />
@@ -65,6 +76,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="/media/js/jquery.numeric.js" ></script>
     <script type="text/javascript">
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
@@ -75,6 +87,9 @@
     });
     $(function () {
         $('#sprint_end_date').datepicker();
+    });
+    $(document).ready(function(){
+        $("#velocity").numeric();
     });
     </script>
     {% endblock %}

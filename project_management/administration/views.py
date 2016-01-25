@@ -30,7 +30,7 @@ def authenticate_user(request):
     user = authenticate(username=username, password=password)
 
     if not username or not password:
-        messages.add_message(request, messages.INFO, 'Username/Password cannot be empty')
+        messages.add_message(request, messages.INFO, 'Please enter the required fields')
         return HttpResponseRedirect('/administration/login/')
     elif not user:
         messages.add_message(request, messages.INFO, 'Invalid Credentials')
@@ -67,6 +67,11 @@ def add_sprint(request):
     sprint_end_date = request.POST.get('sprint_end_date')
     velocity = request.POST.get('velocity')
 
+    if not sprint_name or not velocity or not sprint_start_date or not sprint_end_date:
+        messages.add_message(request, messages.INFO, 'Please enter the required fields')
+        return HttpResponseRedirect('/administration/sprint/')
+
+
     sprint_start_date = datetime.strptime(sprint_start_date, '%m/%d/%Y')
     sprint_end_date = datetime.strptime(sprint_end_date, '%m/%d/%Y')
 
@@ -99,7 +104,7 @@ def task(request):
     else:
         task_objects = []
 
-    context['users'] = User.objects.all()
+    context['users'] = User.objects.all().values()
     context['sprint_objects'] = sprint_objects
     context['task_objects'] = task_objects
     context['story_points'] = STORY_POINTS
@@ -119,6 +124,11 @@ def add_task(request):
     story_point = request.POST.get('story_point')
     user_id = request.POST.get('user')
     created_datetime = request.POST.get('created_datetime')
+
+    if not task_id or not created_datetime:
+        messages.add_message(request, messages.INFO, 'Please enter the required fields')
+        return HttpResponseRedirect('/administration/task/?id=%s' % sprint_id)
+
     created_datetime = datetime.strptime(created_datetime, '%m/%d/%Y')
 
     sprint_obj = Sprint.objects.get(id=sprint_id)
@@ -127,7 +137,7 @@ def add_task(request):
 
     task_obj = Task()
     task_obj.sprint=sprint_obj
-    task_obj.task_id=task_id
+    task_obj.task_id=task_id.upper()
     task_obj.story_point=story_point
     task_obj.user=user_obj
     task_obj.created_datetime=created_datetime
@@ -186,15 +196,21 @@ def add_subtask(request):
     team = request.POST.get('team')
     status = request.POST.get('status')
     assigned_datetime = request.POST.get('assigned_datetime')
+
+    if not subtask_id or not effort or not assigned_datetime:
+        messages.add_message(request, messages.INFO, 'Please enter the required fields')
+        return HttpResponseRedirect('/administration/subtask/?id=%s' % task_id)
+
     assigned_datetime = datetime.strptime(assigned_datetime, '%m/%d/%Y')
     user_id = request.POST.get('user')
     user_obj = User.objects.get(id=user_id)
+
 
     task_obj = Task.objects.get(id=task_id)
 
     subtask_obj = SubTask()
     subtask_obj.task=task_obj
-    subtask_obj.subtask_id=subtask_id
+    subtask_obj.subtask_id=subtask_id.upper()
     subtask_obj.effort=effort
     subtask_obj.remaining=effort
     subtask_obj.subtask_scope=scope
@@ -389,7 +405,15 @@ def add_review(request):
     review_type = request.POST.get('review_type')
     rca = request.POST.get('rca')
 
-    fixed_date = datetime.strptime(fixed_date, '%m/%d/%Y')
+    if not review_date or not pull_request or not filename or not comment:
+        messages.add_message(request, messages.INFO, 'Please enter the required fields')
+        return HttpResponseRedirect('/administration/review/')
+
+    if fixed_date:
+        fixed_date = datetime.strptime(fixed_date, '%m/%d/%Y')
+    else:
+        fixed_date = None
+
     review_date = datetime.strptime(review_date, '%m/%d/%Y')
 
     subtask_obj = SubTask.objects.get(id=subtask_id)
