@@ -132,4 +132,5 @@ LOGIN_URL = '/administration/login/'
 LOGIN_EXEMPT_URLS = (
  r'administration/authenticate/',
  r'admin/',
+ r'media/*',
  )

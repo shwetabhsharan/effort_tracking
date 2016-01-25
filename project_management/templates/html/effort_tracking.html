@@ -71,7 +71,7 @@
                                         <td>{{obj.code_merge_date | date:"M d, Y" | default_if_none:"NA"}}</td>
                                         <td>{{obj.qa_testing | date:"M d, Y" | default_if_none:"NA"}}</td>
                                         <td>{{obj.closed | date:"M d, Y" | default_if_none:"NA"}}</td>
-                                        <td><a href="/administration/effort/edit/{{obj.id}}/">Edit</a></td>
+                                        <td><a href="/administration/effort/edit/{{obj.id}}/" class="btn btn-primary btn-md">Edit</a></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
