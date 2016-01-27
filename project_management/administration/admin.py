@@ -2,8 +2,8 @@ from django.contrib import admin
 from administration.models import UserProfile, Sprint, Task, SubTask, CodeReview, EffortRecord, EffortTracking
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'user_role')
-    search_fields = ('user', 'user_role')
+    list_display = ('user', 'user_role', 'team')
+    search_fields = ('user', 'user_role', 'team')
 admin.site.register(UserProfile, UserProfileAdmin)
 
 class SprintAdmin(admin.ModelAdmin):
@@ -32,6 +32,6 @@ class EffortRecordAdmin(admin.ModelAdmin):
 admin.site.register(EffortRecord, EffortRecordAdmin)
 
 class EffortTrackingAdmin(admin.ModelAdmin):
-    list_display = ('effort_fk', 'daily_effort', 'effort_date',)
-    search_fields = ('effort_fk', 'daily_effort', 'effort_date',)
+    list_display = ('effort_fk', 'daily_effort', 'effort_date', 'user')
+    search_fields = ('effort_fk', 'daily_effort', 'effort_date', 'user')
 admin.site.register(EffortTracking, EffortTrackingAdmin)

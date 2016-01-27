@@ -10,6 +10,7 @@ from django.shortcuts import HttpResponse
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.contrib import messages
+from django.contrib.auth.password_validation import validate_password
 
 def login_page(request):
     """
@@ -266,7 +267,9 @@ def track_effort(request):
         effort_rec_obj = EffortRecord.objects.get(id=effort_id)
         effort_rec_obj.subtask.remaining = int(effort_rec_obj.subtask.remaining) - int(consumed_efforts)
         effort_rec_obj.subtask.save()
-        et_obj = EffortTracking.objects.create(effort_fk=effort_rec_obj, daily_effort=consumed_efforts, effort_date=datetime.now())
+        et_obj = EffortTracking.objects.create(effort_fk=effort_rec_obj, daily_effort=consumed_efforts, effort_date=datetime.now(), user=request.user)
+    elif effort_id == None and consumed_efforts:
+        et_obj = EffortTracking.objects.create(effort_fk=None, daily_effort=consumed_efforts, effort_date=datetime.now(), user=request.user)
 
     if sprint_id and team:
         sprint_id = int(sprint_id)
@@ -404,8 +407,9 @@ def add_review(request):
     status = request.POST.get('status')
     review_type = request.POST.get('review_type')
     rca = request.POST.get('rca')
+    review_effort = request.POST.get('review_effort')
 
-    if not review_date or not pull_request or not filename or not comment:
+    if not review_date or not pull_request or not filename or not comment or not review_effort:
         messages.add_message(request, messages.INFO, 'Please enter the required fields')
         return HttpResponseRedirect('/administration/review/')
 
@@ -431,6 +435,38 @@ def add_review(request):
                                   status = status,
                                   rca = rca,
                                   developer = request.user,
-                                  reviewer=reviewer_obj
+                                  reviewer=reviewer_obj,
+                                  review_effort=review_effort
                                   )
     return HttpResponseRedirect('/administration/review/')
+
+def profile(request):
+    context = {}
+    context['user'] = request.user
+    return render_to_response('profile.html', context, context_instance=RequestContext(request))
+
+def save_profile(request):
+    password = request.POST.get('password')
+    if not password:
+        messages.add_message(request, messages.INFO, 'Empty password')
+        return HttpResponseRedirect('/administration/profile/')
+
+    user_obj = request.user
+    user_obj.set_password(password)
+    user_obj.save()
+
+    messages.add_message(request, messages.INFO, 'Password changed successfully')
+    return HttpResponseRedirect('/administration/login/')
+
+
+
+
+
+
+
+
+
+
+
+
+

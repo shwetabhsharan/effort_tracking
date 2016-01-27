@@ -47,6 +47,13 @@
                         </div>
                         <div class="form-group">
                             <span style="color:red;">*</span>
+                            <label for="review_effort">Review Effort:</label>
+                            <input type="text" name="review_effort" id="review_effort" class="form-control" style="width: 50px;" />
+                        </div>
+
+                        
+                        <div class="form-group">
+                            <span style="color:red;">*</span>
                             <label for="pull_request">Pull Request:</label>
                             <input type="text" name="pull_request" id="pull_request" class="form-control" style="width: 150px;" />
                         </div>
@@ -110,6 +117,9 @@
     });
     $(document).ready(function(){
         $("#pull_request").numeric();
+    });
+    $(document).ready(function(){
+        $("#review_effort").numeric();
     });
 
     </script>

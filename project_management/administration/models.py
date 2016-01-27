@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 # key - story point value - efforts in hours
 STORY_POINTS = [0, 1, 2, 3, 5, 8, 13, 21, 34]
@@ -38,7 +39,8 @@ TEAM = (
         ('WETL', 'WETL'),
         ('Matrix', 'Matrix'),
         ('Gambit', 'Gambit'),
-        ('Goonies', 'Goonies')
+        ('Goonies', 'Goonies'),
+        ('University', 'University')
         )
 
 review_type_choice = (
@@ -48,7 +50,7 @@ review_type_choice = (
                )
 
 cr_status = (
-             ('Opem', 'Open'),
+             ('Open', 'Open'),
              ('In Progress', 'In Progress'),
              ('Fixed', 'Fixed'),
              ('Closed', 'Closed'),
@@ -72,7 +74,7 @@ class UserProfile(models.Model):
                  ('developer', 'Developer'),
                  ('qa', 'QA')
                  )
-    user = models.ForeignKey(User, unique=True)
+    user = models.OneToOneField(User)
     user_role = models.CharField(max_length=20, null=False, choices=role_type)
     team = models.CharField(max_length=20, null=True, choices=TEAM)
 
@@ -84,6 +86,14 @@ class UserProfile(models.Model):
 
     class Meta:
         verbose_name = 'User Profile'
+
+def create_profile(sender, **kwargs):
+    user = kwargs["instance"]
+    if kwargs["created"]:
+        up = UserProfile(user=user)
+        up.save()
+
+post_save.connect(create_profile, sender=User)
 
 class Sprint(models.Model):
     """
@@ -174,6 +184,7 @@ class CodeReview(models.Model):
     filename = models.TextField()
     comment = models.TextField()
 
+    review_effort = models.IntegerField(max_length=2)
     review_date = models.DateTimeField()
     fix_date = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=30, null=False, choices=cr_status)
@@ -221,9 +232,10 @@ class EffortTracking(models.Model):
         
     """
 
-    effort_fk = models.ForeignKey(EffortRecord)
+    effort_fk = models.ForeignKey(EffortRecord, null=True, blank=True)
     daily_effort = models.IntegerField(max_length=1)
     effort_date = models.DateField()
+    user = models.ForeignKey(User, null=True, blank=True)
 
     class Meta:
         ordering = ['-effort_date']

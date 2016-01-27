@@ -19,4 +19,6 @@ urlpatterns = [
                url(r'^tracking/$', views.track_effort),
                url(r'^review/$', views.review),
                url(r'^review/add/$', views.add_review),
+               url(r'^profile/$', views.profile),
+               url(r'^profile/save/$', views.save_profile),
 ]
