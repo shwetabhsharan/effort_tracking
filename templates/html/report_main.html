@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div id="wrapper">
+        {% include 'sidebar.html' %}
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Reports</h1>
+                        <div><a href="/administration/report/compliance/">Compliance Report</a></div>
+                        <div><a href="/administration/report/tag/">Filter Stories with Tags</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="/media/js/bootstrap.js"></script>
+    <script>
+    function checkPasswordMatch() {
+        $("#divCheckPasswordMatch").html("");
+        var password = $("#password").val();
+        var confirmPassword = $("#confirm_password").val();
+
+        if (password != confirmPassword)
+            $("#divCheckPasswordMatch").html("Passwords do not match!");
+        else
+            $("#divCheckPasswordMatch").html("Passwords match.");
+    }
+
+    $(document).ready(function () {
+       $("#confirm_password").keyup(checkPasswordMatch);
+    });
+    </script>
+{% endblock %}

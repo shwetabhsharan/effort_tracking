@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div id="wrapper">
+        {% include 'sidebar.html' %}
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Edit: {{sprint_obj.sprint_name}}</h1>
+                        <form action="/administration/sprint/edit/{{sprint_obj.id}}/save/" method="POST">{% csrf_token %}
+                            <div class="form-group">
+                                <span style="color:red;">*</span>
+                                <label for="sprint_name">Name:</label>
+                                <input type="text" name="sprint_name" id="sprint_name" class="form-control" value="{{sprint_obj.sprint_name}}" style="width: 300px;"/>
+                            </div>
+                            <div class="form-group">
+                                <span style="color:red;">*</span>
+                                <label for="sprint_name">Velocity:</label>
+                                <input type="text" name="velocity" id="velocity" class="form-control" style="width: 50px;" value="{{sprint_obj.velocity}}" style="width: 300px;"/>
+                            </div>
+                            <div class="form-group">
+                                <span style="color:red;">*</span>
+                                <label for="pwd">Start Date:</label>
+                                <input type="text" name="sprint_start_date" id="sprint_start_date" class="form-control" readonly value="{{sprint_obj.sprint_start_date | date:'m/d/Y'}}" style="width: 300px;"/>
+                            </div>
+                            <div class="form-group">
+                                <span style="color:red;">*</span>
+                                <label for="sprint_name">End Date:</label>
+                                <input type="text" name="sprint_end_date" id="sprint_end_date" class="form-control" readonly value="{{sprint_obj.sprint_end_date | date:'m/d/Y'}}" style="width: 300px;"/>
+                            </div>
+                            <div>
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <span style="color: red;">{{message}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn btn-primary btn-md" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="/media/js/jquery.numeric.js" ></script>
+    <script>
+    $(function () {
+        $('#sprint_start_date').datepicker();
+    });
+    $(function () {
+        $('#sprint_end_date').datepicker();
+    });
+    $(document).ready(function(){
+        $("#velocity").numeric();
+    });
+    </script>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+    <div id="wrapper">
+        <!-- sidebar-wrapper -->
+        {% include 'sidebar.html' %}
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Review Details</h1>
+                        <div style="margin-top: 30px;">
+                            <div class="form-group">
+                                <label for="sprint_name">Sprint Name:</label>
+                                <select name="sprint_id" id="sprint_id">
+                                {% for sprint in sprint_objects %}
+                                    <option value="{{sprint.id}}" {% ifequal sprint.id sprint_id %}selected="selected"{% endifequal %}>{{sprint.sprint_name}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <input type="button" value="Filter" class="btn btn-primary btn-md" onClick="filterReviewData();"/>
+                            </div>
+                        </div>
+
+                        <div style="height: 300px; overflow: auto; margin-top: 30px;">
+                            My Reviewed Code
+                            <table class="table">
+                                <thead>
+                                    <th>Sr. No.</th>
+                                    <th>Review Type</th>
+                                    <th>Reviewer</th>
+                                    <th>Filename</th>
+                                    <th>Comment</th>
+                                    <th>Review Date</th>
+                                    <th>Fixed Date</th>
+                                    <th>RCA</th>
+                                </thead>
+                                <tbody>
+                                    {% for obj in my_reviewed_obj_list %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{obj.review_type}}</td>
+                                        <td>{{obj.reviewer.username}}</td>
+                                        <td>{{obj.filename}}</td>
+                                        <td>{{obj.comment}}</td>
+                                        <td>{{obj.review_date | date:"M d, Y"}}</td>
+                                        <td>{{obj.fix_date | date:"M d, Y"}}</td>
+                                        <td>{{obj.rca}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                 </tbody>
+                             </table>
+                        </div>
+                        <div style="height: 300px; overflow: auto; margin-top: 10px;">
+                            Code I Reviewed
+                            <table class="table">
+                                <thead>
+                                    <th>Sr. No.</th>
+                                    <th>Review Type</th>
+                                    <th>Reviewer</th>
+                                    <th>Filename</th>
+                                    <th>Comment</th>
+                                    <th>Review Date</th>
+                                    <th>Fixed Date</th>
+                                    <th>RCA</th>
+                                </thead>
+                                <tbody>
+                                    {% for obj in my_reviewed_obj_list %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{obj.review_type}}</td>
+                                        <td>{{obj.reviewer.username}}</td>
+                                        <td>{{obj.filename}}</td>
+                                        <td>{{obj.comment}}</td>
+                                        <td>{{obj.review_date | date:"M d, Y"}}</td>
+                                        <td>{{obj.fix_date | date:"M d, Y"}}</td>
+                                        <td>{{obj.rca}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                 </tbody>
+                             </table>
+                        </div>
+
+<!--                         {% if my_reviewed_obj_list %}
+                        <div style="height: 500px; overflow: auto; margin-top: 30px;">
+                            <table class="table">
+                                <thead>
+                                    <th>Sr. No.</th>
+                                    <th>Assigned On</th>
+                                    <th>Story</th>
+                                    <th>Sub Task</th>
+                                    <th>Scope</th>
+                                    <th>Developer</th>
+                                    <th>Status</th>
+                                    <th>Start Date</th>
+                                    <th>Peer Review</th>
+                                    <th>Internal QA</th>
+                                    <th>Pull Request</th>
+                                    <th>Client Review Fix</th>
+                                    <th>Code Merge</th>
+                                    <th>QA</th>
+                                    <th>Closed</th>
+                                    <th>Action</th>
+                                </thead>
+                                <tbody>
+                                    {% for obj in effort_record_list %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{obj.subtask.assigned_datetime | date:"M d, Y"}}</td>
+                                        <td>{{obj.subtask.task.task_id}}</td>
+                                        <td>{{obj.subtask.subtask_id}}</td>
+                                        <td>{{obj.subtask.subtask_scope}}</td>
+                                        <td>{{obj.subtask.user | default_if_none:"NA"}}</td>
+                                        <td>{{obj.subtask.status | default_if_none:"NA"}}</td>
+                                        <td>{{obj.start_date | date:"M d, Y" | default_if_none:"NA"}}</td>
+                                        <td>{{obj.peer_review_date | date:"M d, Y" | default_if_none:"NA"}}</td>
+                                        <td>{{obj.internal_qa_date | date:"M d, Y" | default_if_none:"NA"}}</td>
+                                        <td>{{obj.pr_date | date:"M d, Y" | default_if_none:"NA"}}</td>
+                                        <td>{{obj.client_review_date | date:"M d, Y" | default_if_none:"NA"}}</td>
+                                        <td>{{obj.code_merge_date | date:"M d, Y" | default_if_none:"NA"}}</td>
+                                        <td>{{obj.qa_testing | date:"M d, Y" | default_if_none:"NA"}}</td>
+                                        <td>{{obj.closed | date:"M d, Y" | default_if_none:"NA"}}</td>
+                                        <td><a href="/administration/effort/edit/{{obj.id}}/" class="btn btn-primary btn-md">Edit</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %} -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block js %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function filterReviewData(){
+        var sprint_id = $( "#sprint_id").val();
+        var url = "/administration/review/mylist/?id=" + sprint_id;
+        window.location = url;
+        }
+
+    </script>
+    {% endblock %}
+{% endblock %}

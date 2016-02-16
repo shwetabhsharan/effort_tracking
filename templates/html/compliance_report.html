@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div id="wrapper">
+        {% include 'sidebar.html' %}
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <h1>Non Compliance Report</h1>
+                        <p>Report shown will always start on Monday</p>
+                        <div><b>Start Date:</b> {{start | date:"M d, Y"}} - <b>End Date:</b> {{end | date:"M d, Y"}}</div>
+                        <div class="form-group">
+                            <label for="sprint_name">Filter Date:</label>
+                            <input type="text" name="filter_datetime" id="filter_datetime" class="form-control" readonly style="width: 99px; display: inline;"/>
+                            <input type="button" id="button" value="Filter" class="btn btn-primary btn-md" onClick="filterReport();"/>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <th>Users</th>
+                                {% for tdate in days_list %}
+                                    <th>{{tdate | date:"D, M d, Y"}}</th>
+                                {% endfor %}
+                                <th>Total</th>
+                            </thead>
+                            <tbody>
+                                {% for user, details in user_efforts.items %}
+                                <tr>
+                                    <td>{{user}}</td>
+                                    {% for effort in details %}
+                                        <td {% if effort < 6 %}style="color: red;"{% else %}style="color: green;"{% endif %}>{{effort}}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script>
+
+    $(function () {
+        $('#filter_datetime').datepicker({ beforeShowDay: $.datepicker.noWeekends });
+    });
+    function filterReport(){
+        var filter_datetime = $( "#filter_datetime").val();
+        var url = "/administration/report/compliance/?d=" + filter_datetime;
+        window.location = url;
+    }
+    </script>
+{% endblock %}

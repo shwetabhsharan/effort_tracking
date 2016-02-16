@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div id="wrapper">
+        {% include 'sidebar.html' %}
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Filter Tagged Stories</h1>
+                        <div style="width: 20%; float: right;"><b>Commonly Used Tags:</b>
+                            <div style="height: 500px; overflow: auto;">
+                                {% for keyword in keywords %}
+                                    <p>{{keyword}}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select name="sprint_id" id="sprint_id">
+                                {% for sprint in sprint_objects %}
+                                    <option value={{sprint.id}} {% ifequal sprint.id sprint_id %}selected="selected"{% endifequal %}>{{sprint.sprint_name}}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="text" name="tag_name" id="tag_name" class="form-control" placeholder="Enter a Tag to search" style="width: 300px; display: inline;" value="{{filter_term | default_if_none:''}}"/>
+                            <button type="button" onClick="filterTasks();" class="btn btn-primary btn-md" style="margin-top: -3px;">Filter</button>
+                        </div>
+
+                        <div style="width: 50%; display: inline-block; height: 400px; overflow: auto;">
+                            <table class="table">
+                                <thead>
+                                    <th>Sr. No.</th>
+                                    <th>Jira ID</th>
+                                    <th>Story Point</th>
+                                    <th>Created</th>
+                                    <th>Assigned To</th>
+                                </thead>
+                                <tbody>
+                                    {% for task in task_list %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{task.task_id}}</td>
+                                        <td>{{task.story_point}}</td>
+                                        <td>{{task.created_datetime | date:"M d, Y"}}</td>
+                                        <td>{{task.user}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="/media/js/bootstrap.js"></script>
+    <script>
+    function filterTasks() {
+        var tag_name = $("#tag_name").val();
+        var sprint_id = $("#sprint_id").val();
+        if (tag_name){
+            var url = "/administration/report/tag/?filter=" + tag_name + "&id=" + sprint_id;
+            window.location = url;
+        }
+    }
+    </script>
+{% endblock %}
